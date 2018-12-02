@@ -27,6 +27,9 @@
   "homepage": "https://github.com/zlotny/backend-developer-test#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "express-bearer-token": "^2.2.0",
+    "express-session": "^1.15.6",
+    "grant-express": "^4.2.1",
     "mongoose": "^5.3.14",
     "reflect-metadata": "^0.1.12",
     "typegoose": "^5.4.1",

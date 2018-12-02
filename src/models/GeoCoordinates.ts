@@ -1,4 +1,4 @@
-import { prop, Typegoose } from 'typegoose';
+import { prop } from 'typegoose';
 
 export default class GeoCoordinates {
     @prop({ default: 0.00 })

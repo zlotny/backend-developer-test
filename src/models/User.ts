@@ -3,7 +3,13 @@ import { prop, Typegoose } from 'typegoose';
 import Game from './Game';
 
 export default class User extends Typegoose {
-    @prop({ required: true, unique: true })
+    @prop({required: true, unique: true})
+    email: string;
+
+    @prop()
+    token: string;
+    
+    @prop({ required: true })
     name: string;
 
     @prop()

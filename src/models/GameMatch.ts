@@ -1,4 +1,4 @@
-import { prop, Typegoose, arrayProp, instanceMethod } from "typegoose";
+import { prop, Typegoose, arrayProp } from "typegoose";
 import Game from "./Game";
 import User from "./User";
 
