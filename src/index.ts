@@ -5,7 +5,7 @@ import express = require('express');
 
 const app = express();
 
-app.use('/', BaseRouter);
+app.use('/api', BaseRouter);
 
 mongoose.connect(Config.mongodbDatabase, {
     useNewUrlParser: true,

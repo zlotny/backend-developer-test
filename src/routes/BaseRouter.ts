@@ -8,6 +8,8 @@ import session = require('express-session');
 import Grant = require('grant-express');
 import bearerToken = require('express-bearer-token');
 import { Config } from 'config/Configuration';
+import { GameMatchsRouter } from './GameMatchRouter';
+import { JoinRequestRouter } from './JoinRequestRouter';
 
 const UserModel: any = new User().getModelForClass(User);
 
@@ -44,7 +46,9 @@ router.get('/google_callback', async (req: Request, res: Response): Promise<void
 });
 
 // TODO: Needs completion
-router.use('/api/users', requiresAuth, UsersRouter);
-router.use('/api/games', requiresAuth, GamesRouter);
+router.use('/users', requiresAuth, UsersRouter);
+router.use('/games', requiresAuth, GamesRouter);
+router.use('/gameMatches', requiresAuth, GameMatchsRouter);
+router.use('/joinRequests', requiresAuth, JoinRequestRouter);
 
 export const BaseRouter: Router = router;
