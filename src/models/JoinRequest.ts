@@ -3,13 +3,13 @@ import User from './User';
 import GameMatch from './GameMatch';
 
 export default class JoinRequest extends Typegoose {
-    @prop()
+    @prop({ required: true })
     source: User;
 
-    @prop()
+    @prop({ required: true })
     destination: User;
 
-    @prop()
+    @prop({ required: true })
     match: GameMatch;
 
     @prop({ default: false })

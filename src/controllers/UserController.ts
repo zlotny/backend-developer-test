@@ -13,6 +13,9 @@ export default class UserController {
     }
 
     public static async create(req, res) {
+        // TODO: Create user roles and allow admins to do it.
+        res.status(403).send({ message: "User creation forbidden" });
+        return;
         try {
             let toRet = await new UserModel(req.body).save();
             res.send(toRet);
@@ -32,6 +35,10 @@ export default class UserController {
 
     public static async update(req, res) {
         try {
+            if (req.user._id != req.params.userId) {
+                res.status(403).send({ message: "Editing an user that is not you is forbidden" });
+                return;
+            }
             let toRet = await UserModel.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true });
             res.send(toRet);
         } catch (err) {
@@ -41,6 +48,10 @@ export default class UserController {
 
     public static async delete(req, res) {
         try {
+            if (req.user._id != req.params.userId) {
+                res.status(403).send({ message: "Deleting an user that is not you is forbidden" });
+                return;
+            }
             let toRet = await UserModel.findByIdAndRemove(req.params.userId);
             if (!toRet) {
                 res.status(404).send({ message: 'User not found' });

@@ -1,9 +1,16 @@
 import JoinRequest from "models/JoinRequest";
+import GameMatch from "models/GameMatch";
+import User from "models/User";
 
 const JoinRequestModel: any = new JoinRequest().getModelForClass(JoinRequest);
+const GameMatchModel: any = new GameMatch().getModelForClass(GameMatch);
+const UserModel: any = new User().getModelForClass(User);
 
 export default class JoinRequestController {
     public static async listAll(req, res) {
+        // TODO: Create user roles and allow admins to do it.
+        res.status(403).send({ message: "Listing all requests forbidden" });
+        return;
         try {
             let toRet = await JoinRequestModel.find({});
             res.json(toRet);
@@ -13,6 +20,35 @@ export default class JoinRequestController {
     }
 
     public static async create(req, res) {
+        try {
+            req.body.match = await GameMatchModel.findById(req.body.match._id);
+            req.body.source = await UserModel.findById(req.body.source._id);
+            req.body.destination = await UserModel.findById(req.body.destination._id);
+        } catch (err) {
+            res.status(400).send(err);
+            return;
+        }
+
+        if (req.body.source._id.toString() != req.user._id.toString()) {
+            res.status(403).send({ message: "The source user must be you" });
+            return;
+        }
+
+        if (req.body.destination._id.toString() == req.user._id.toString()) {
+            res.status(403).send({ message: "The destination user cannot be you" });
+            return;
+        }
+
+        if (req.body.match.host._id.toString() == req.user._id.toString()) {
+            res.status(403).send({ message: "The match host user cannot be you" });
+            return;
+        }
+
+        if (req.body.match.host._id.toString() != req.body.destination._id.toString()) {
+            res.status(403).send({ message: "The destination for the join request must be the same as the match" });
+            return;
+        }
+
         try {
             let toRet = await new JoinRequestModel(req.body).save();
             res.send(toRet);
@@ -31,6 +67,9 @@ export default class JoinRequestController {
     }
 
     public static async update(req, res) {
+        // TODO: Create user roles and allow admins to do it.
+        res.status(403).send({ message: "Modifying requests forbidden" });
+        return;
         try {
             let toRet = await JoinRequestModel.findOneAndUpdate({ _id: req.params.joinRequestId }, req.body, { new: true });
             res.send(toRet);
@@ -40,12 +79,18 @@ export default class JoinRequestController {
     }
 
     public static async delete(req, res) {
+        let targetRequest = await JoinRequestModel.findById(req.params.joinRequestId);
         try {
-            let toRet = await JoinRequestModel.findByIdAndRemove(req.params.joinRequestId);
-            if (!toRet) {
+            if (!targetRequest) {
                 res.status(404).send({ message: 'JoinRequest not found' });
             } else {
-                res.send({ message: 'JoinRequest successfuly deleted' });
+                if (targetRequest.source._id.toString() != req.user._id.toString()) {
+                    res.status(403).send({ message: "You can only delete a request in which the source is you" });
+                    return;
+                } else {
+                    await JoinRequestModel.findByIdAndRemove(req.params.joinRequestId);
+                    res.send({ message: 'JoinRequest successfuly deleted' });
+                }
             }
         } catch (err) {
             res.status(400).send(err);
