@@ -25,6 +25,10 @@ export default class GameMatchController {
             return;
         }
 
+        if (!req.body.host.games.includes(req.body.game._id)) {
+            res.status(403).send({ message: "You cannot create a match for a game not in your interests" });
+        }
+
         if (req.body.host._id.toString() != req.user._id.toString()) {
             res.status(403).send({ message: "You can only create matches in which the host is you" })
             return;

@@ -1,14 +1,14 @@
-import { prop, Typegoose, arrayProp } from "typegoose";
+import { prop, Typegoose, arrayProp, Ref } from "typegoose";
 import Game from "./Game";
 import User from "./User";
 
 export default class GameMatch extends Typegoose {
-    @prop({ required: true })
-    game: Game;
+    @prop({ required: true, ref: Game })
+    game: Ref<Game>;
 
-    @prop({ required: true })
-    host: User;
+    @prop({ required: true, ref: User })
+    host: Ref<User>;
 
-    @arrayProp({ items: User })
-    players: User[];
+    @arrayProp({ itemsRef: User })
+    players: Ref<User>[];
 }

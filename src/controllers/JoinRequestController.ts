@@ -152,6 +152,9 @@ export default class JoinRequestController {
 
     public static async acceptRequest(req, res) {
         let joinRequest = await JoinRequestModel.findById(req.params.joinRequestId);
+
+        let targetMatch = await GameMatchModel.findById(joinRequest.match);
+
         if (joinRequest === null) {
             res.status(404).send({ message: "Join request not found" });
             return;
@@ -162,23 +165,21 @@ export default class JoinRequestController {
             return;
         }
 
-        if (joinRequest.destination._id.toString() != req.user._id.toString()) {
+        if (joinRequest.destination.toString() != req.user._id.toString()) {
             res.status(403).send({ message: "You cannot accept a request that's not sent to you" });
             return;
         }
 
-        if (joinRequest.match.host._id.toString() != req.user._id.toString()) {
+        if (targetMatch.host.toString() != req.user._id.toString()) {
             res.status(403).send({ message: "You cannot accept a request for a match not created by you" });
             return;
         }
 
         // Add the player to the target match
-        let targetMatch = await GameMatchModel.findById(joinRequest.match._id);
         targetMatch.players.push(joinRequest.source);
         await targetMatch.save();
 
         // Resolve the request and add the modified match
-        joinRequest.match = targetMatch;
         joinRequest.resolved = true;
         await joinRequest.save();
         res.send(joinRequest);

@@ -1,16 +1,16 @@
-import { prop, Typegoose, instanceMethod } from 'typegoose';
+import { prop, Typegoose, instanceMethod, Ref } from 'typegoose';
 import User from './User';
 import GameMatch from './GameMatch';
 
 export default class JoinRequest extends Typegoose {
-    @prop({ required: true })
-    source: User;
+    @prop({ required: true, ref: User })
+    source: Ref<User>;
 
-    @prop({ required: true })
-    destination: User;
+    @prop({ required: true, ref: User })
+    destination: Ref<User>;
 
-    @prop({ required: true })
-    match: GameMatch;
+    @prop({ required: true, ref: GameMatch })
+    match: Ref<GameMatch>;
 
     @prop({ default: false })
     resolved: boolean;
