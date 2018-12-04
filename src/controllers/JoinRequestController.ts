@@ -22,8 +22,20 @@ export default class JoinRequestController {
     public static async create(req, res) {
         try {
             req.body.match = await GameMatchModel.findById(req.body.match._id);
+            if (req.body.match === null) {
+                res.status(404).send({ message: "Game Match not found" });
+                return;
+            }
             req.body.source = await UserModel.findById(req.body.source._id);
+            if (req.body.source === null) {
+                res.status(404).send({ message: "Source user not found" });
+                return;
+            }
             req.body.destination = await UserModel.findById(req.body.destination._id);
+            if (req.body.destination === null) {
+                res.status(404).send({ message: "Destination user not found" });
+                return;
+            }
         } catch (err) {
             res.status(400).send(err);
             return;
@@ -52,8 +64,10 @@ export default class JoinRequestController {
         try {
             let toRet = await new JoinRequestModel(req.body).save();
             res.send(toRet);
+            return;
         } catch (err) {
             res.status(400).send(err);
+            return;
         }
     }
 
@@ -92,6 +106,24 @@ export default class JoinRequestController {
                     res.send({ message: 'JoinRequest successfuly deleted' });
                 }
             }
+        } catch (err) {
+            res.status(400).send(err);
+        }
+    }
+
+    public static async listReceivedRequests(req, res) {
+        try {
+            let toRet = await JoinRequestModel.find({ "destination": req.user });
+            res.json(toRet);
+        } catch (err) {
+            res.status(400).send(err);
+        }
+    }
+
+    public static async listSentRequests(req, res) {
+        try {
+            let toRet = await JoinRequestModel.find({ "source": req.user });
+            res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
