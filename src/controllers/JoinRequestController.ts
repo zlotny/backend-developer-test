@@ -1,6 +1,7 @@
 import JoinRequest from "models/JoinRequest";
 import GameMatch from "models/GameMatch";
 import User from "models/User";
+import { join } from "path";
 
 const JoinRequestModel: any = new JoinRequest().getModelForClass(JoinRequest);
 const GameMatchModel: any = new GameMatch().getModelForClass(GameMatch);
@@ -113,7 +114,7 @@ export default class JoinRequestController {
 
     public static async listReceivedRequests(req, res) {
         try {
-            let toRet = await JoinRequestModel.find({ "destination": req.user });
+            let toRet = await JoinRequestModel.find({ "destination": req.user, "resolved": false });
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
@@ -122,10 +123,64 @@ export default class JoinRequestController {
 
     public static async listSentRequests(req, res) {
         try {
-            let toRet = await JoinRequestModel.find({ "source": req.user });
+            let toRet = await JoinRequestModel.find({ "source": req.user, "resolved": false });
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
+    }
+
+    public static async sendRequestToGameMatch(req, res) {
+        let gameMatch = await GameMatchModel.findById(req.params.matchId);
+        if (gameMatch === null) {
+            res.status(404).send({ message: "Match not found" });
+            return
+        }
+
+        if (gameMatch.host._id.toString() == req.user._id.toString()) {
+            res.status(403).send({ message: "You cannot send a request to a game match hosted by you" });
+            return;
+        }
+
+        let toRet = await new JoinRequestModel({
+            source: req.user,
+            destination: gameMatch.host,
+            match: gameMatch
+        }).save();
+        res.send(toRet);
+    }
+
+    public static async acceptRequest(req, res) {
+        let joinRequest = await JoinRequestModel.findById(req.params.joinRequestId);
+        if (joinRequest === null) {
+            res.status(404).send({ message: "Join request not found" });
+            return;
+        }
+
+        if (joinRequest.resolved) {
+            res.status(403).send({ message: "This request is already resolved" });
+            return;
+        }
+
+        if (joinRequest.destination._id.toString() != req.user._id.toString()) {
+            res.status(403).send({ message: "You cannot accept a request that's not sent to you" });
+            return;
+        }
+
+        if (joinRequest.match.host._id.toString() != req.user._id.toString()) {
+            res.status(403).send({ message: "You cannot accept a request for a match not created by you" });
+            return;
+        }
+
+        // Add the player to the target match
+        let targetMatch = await GameMatchModel.findById(joinRequest.match._id);
+        targetMatch.players.push(joinRequest.source);
+        await targetMatch.save();
+
+        // Resolve the request and add the modified match
+        joinRequest.match = targetMatch;
+        joinRequest.resolved = true;
+        await joinRequest.save();
+        res.send(joinRequest);
     }
 }

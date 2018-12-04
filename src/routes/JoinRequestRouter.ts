@@ -18,4 +18,10 @@ router.route('/:joinRequestId')
     .put(JoinRequestController.update)
     .delete(JoinRequestController.delete);
 
+router.route("/send/:matchId")
+    .post(JoinRequestController.sendRequestToGameMatch);
+
+router.route("/accept/:joinRequestId")
+    .put(JoinRequestController.acceptRequest);
+
 export const JoinRequestRouter: Router = router;
