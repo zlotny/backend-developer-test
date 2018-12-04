@@ -12,4 +12,8 @@ router.route('/:userId')
     .put(UserController.update)
     .delete(UserController.delete);
 
+router.route('/:userId/games/:gameId')
+    .post(UserController.addGameToUserInterests)
+    .delete(UserController.deleteGameFromUserInterests);
+
 export const UsersRouter: Router = router;
