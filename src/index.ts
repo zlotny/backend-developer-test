@@ -10,6 +10,7 @@ import session = require('express-session');
 import exphbs = require('express-handlebars');
 import path = require('path');
 import Log from 'utils/Log';
+import { dbSeedHandler } from 'config/DatabaseSeeder';
 const { createLogger, format, transports } = require('winston');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../swagger.json');
@@ -46,9 +47,7 @@ app.use('/', express.static(path.join(__dirname, '../public')))
 app.use('/', WebRouter);
 
 mongoose.set('useCreateIndex', true);
-mongoose.connect(Config.mongodbDatabase, {
-    useNewUrlParser: true,
-});
+mongoose.connect(Config.mongodbDatabase, { useNewUrlParser: true, }, dbSeedHandler);
 
 app.listen(Config.port, () => {
     Log.Instance.info(`Server started at port ${Config.port}`);

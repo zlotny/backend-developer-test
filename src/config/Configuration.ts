@@ -1,6 +1,7 @@
 export const Config = {
     port: 3000,
     mongodbDatabase: "mongodb://localhost:27017/feeld-test",
+    seedDataIfDBEmpty: true,
     logfile: "application.log",
     logDir: "./",
     sessionConfig: {
