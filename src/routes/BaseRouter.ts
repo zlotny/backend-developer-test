@@ -14,7 +14,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(bearerToken())
 
-// TODO: Needs completion
 router.use('/users', requiresAuth, UsersRouter);
 router.use('/games', requiresAuth, GamesRouter);
 router.use('/gameMatches', requiresAuth, GameMatchsRouter);
