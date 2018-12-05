@@ -7,6 +7,9 @@ router.route('/')
     .get(UserController.listAll)
     .post(UserController.create);
 
+router.route("/withMyInterests/:maxDistance")
+    .get(UserController.listNearUsersWithMyInterests);
+
 router.route('/:userId')
     .get(UserController.read)
     .put(UserController.update)

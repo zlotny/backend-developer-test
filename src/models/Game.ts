@@ -4,12 +4,12 @@ export default class Game extends Typegoose {
     @prop({ required: true, unique: true })
     title: string;
 
-    @prop()
+    @prop({ required: true })
     description: string;
 
-    @prop()
-    minPlayers: string;
+    @prop({ required: true })
+    minPlayers: number;
 
-    @prop()
-    maxPlayers: string;
+    @prop({ required: true })
+    maxPlayers: number;
 }

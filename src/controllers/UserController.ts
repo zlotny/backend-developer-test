@@ -109,4 +109,29 @@ export default class UserController {
         await req.user.save();
         res.send(req.user);
     }
+
+    public static async listNearUsersWithMyInterests(req, res) {
+        try {
+            let toRet = await UserModel.find({
+                _id: { $ne: req.user._id },
+                games: { $in: req.user.games },
+                location: {
+                    $near:
+                    {
+                        $geometry:
+                        {
+                            type: "Point",
+                            coordinates: req.user.location
+                        },
+                        $maxDistance: Number(req.params.maxDistance)
+                    }
+                }
+            });
+            res.json(toRet);
+            return;
+        } catch (err) {
+            res.status(400).send(err);
+            return;
+        }
+    }
 }

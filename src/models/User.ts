@@ -1,7 +1,7 @@
-import GeoCoordinates from './GeoCoordinates';
-import { prop, Typegoose, arrayProp, Ref } from 'typegoose';
+import { prop, Typegoose, arrayProp, Ref, index } from 'typegoose';
 import Game from './Game';
 
+@index({ location: '2d' })
 export default class User extends Typegoose {
     @prop({ required: true, unique: true })
     email: string;
@@ -12,8 +12,8 @@ export default class User extends Typegoose {
     @prop({ required: true })
     name: string;
 
-    @prop({ required: true, default: new GeoCoordinates() })
-    location: GeoCoordinates;
+    @prop({ required: true })
+    location: number[];
 
     @arrayProp({ itemsRef: Game })
     games: Ref<Game>[];

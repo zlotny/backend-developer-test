@@ -27,7 +27,8 @@ app.get('/google_callback', async (req: Request, res: Response): Promise<void> =
         user = new UserModel({
             email: user_email,
             token: user_token,
-            name: "Fixme"
+            name: "Fixme",
+            location: [26.7747074, -71.1144237]
         });
         await user.save();
     } else {
