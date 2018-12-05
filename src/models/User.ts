@@ -9,7 +9,7 @@ export default class User extends Typegoose {
     @prop()
     token: string;
 
-    @prop()
+    @prop({ default: false })
     isAdmin: boolean;
 
     @prop({ required: true })

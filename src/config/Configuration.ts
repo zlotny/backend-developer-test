@@ -6,6 +6,8 @@ export const Config = {
         resave: true,
         saveUninitialized: true
     },
+    geoLocationAPIUrl: "http://ip-api.com/json/",
+    googleUserInfoUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
     grant: {
         server: {
             protocol: "http",
@@ -17,7 +19,8 @@ export const Config = {
             callback: "/google_callback",
             scope: [
                 "profile",
-                "email"
+                "email",
+                "https://www.googleapis.com/auth/userinfo.profile"
             ]
         }
     }
