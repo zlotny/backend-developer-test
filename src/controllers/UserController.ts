@@ -131,4 +131,10 @@ export default class UserController {
             return;
         }
     }
+
+    public static async getOwnInformation(req, res) {
+        let toRet = await UserModel.findById(req.user._id).select('-token');
+        res.send(toRet);
+        return;
+    }
 }

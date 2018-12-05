@@ -8,6 +8,9 @@ router.route('/')
     .get(UserController.listAll)
     .post(denyToRegularUsers, UserController.create);
 
+router.route('/me')
+    .get(UserController.getOwnInformation);
+
 router.route("/withMyInterests/:maxDistance")
     .get(UserController.listNearUsersWithMyInterests);
 
