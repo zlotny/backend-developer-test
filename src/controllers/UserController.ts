@@ -5,7 +5,7 @@ const UserModel: any = new User().getModelForClass(User);
 export default class UserController {
     public static async listAll(req, res) {
         try {
-            let toRet = await UserModel.find({});
+            let toRet = await UserModel.find({}).select("-token");
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
@@ -23,7 +23,7 @@ export default class UserController {
 
     public static async read(req, res) {
         try {
-            let toRet = await UserModel.findById(req.params.userId);
+            let toRet = await UserModel.findById(req.params.userId).select("-token");
             res.send(toRet);
         } catch (err) {
             res.status(400).send(err);
@@ -123,7 +123,7 @@ export default class UserController {
                         $maxDistance: Number(req.params.maxDistance)
                     }
                 }
-            });
+            }).select("-token");
             res.json(toRet);
             return;
         } catch (err) {
