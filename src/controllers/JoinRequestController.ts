@@ -9,9 +9,6 @@ const UserModel: any = new User().getModelForClass(User);
 
 export default class JoinRequestController {
     public static async listAll(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "Listing all requests forbidden" });
-        return;
         try {
             let toRet = await JoinRequestModel.find({});
             res.json(toRet);
@@ -82,9 +79,6 @@ export default class JoinRequestController {
     }
 
     public static async update(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "Modifying requests forbidden" });
-        return;
         try {
             let toRet = await JoinRequestModel.findOneAndUpdate({ _id: req.params.joinRequestId }, req.body, { new: true });
             res.send(toRet);

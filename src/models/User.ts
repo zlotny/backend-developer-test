@@ -9,6 +9,9 @@ export default class User extends Typegoose {
     @prop()
     token: string;
 
+    @prop()
+    isAdmin: boolean;
+
     @prop({ required: true })
     name: string;
 
