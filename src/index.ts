@@ -8,6 +8,7 @@ import { injectLocation } from 'middleware/Location';
 import AuthController from 'controllers/AuthController';
 import { WebRouter } from "routes/WebRouter";
 import exphbs = require('express-handlebars');
+import path = require('path');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.get('/google_callback', injectLocation, AuthController.googleAuthCallback);
 app.get('/facebook_callback', injectLocation, AuthController.facebookAuthCallback);
 
 // Web router
+app.use('/', express.static(path.join(__dirname, '../public')))
 app.use('/', WebRouter);
 
 // API router
