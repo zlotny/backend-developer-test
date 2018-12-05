@@ -15,6 +15,7 @@ app.use(new Grant(Config.grant));
 
 // Google authorization callback
 app.get('/google_callback', injectLocation, AuthController.googleAuthCallback);
+app.get('/facebook_callback', injectLocation, AuthController.facebookAuthCallback);
 
 // API router
 app.use('/api', BaseRouter);

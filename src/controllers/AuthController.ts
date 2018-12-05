@@ -34,5 +34,35 @@ export default class AuthController {
         res.end(JSON.stringify(user_token));
     }
 
+    public static async facebookAuthCallback(req, res) {
+    
+        let profileData = await Axios.get(
+            Config.facebokUserInfoUrl,
+            { headers: { 'Authorization': "Bearer " + req.query.access_token } }
+        );
+
+        let user_email: string = profileData.data.email;
+        let user_token: string = req.query.access_token;
+        let userName: string = profileData.data.name;
+
+        let user: typeof UserModel = await UserModel.findOne({ email: user_email });
+
+        if (user === null) {
+            user = new UserModel({
+                email: user_email,
+                token: user_token,
+                name: userName,
+                isAdmin: false,
+                location: req.location
+            });
+            await user.save();
+        } else {
+            user.token = user_token;
+            user.location = req.location;
+            await user.save();
+        }
+        res.end(JSON.stringify(user_token));
+    }
+
 
 }

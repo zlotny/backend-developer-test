@@ -8,6 +8,7 @@ export const Config = {
     },
     geoLocationAPIUrl: "http://ip-api.com/json/",
     googleUserInfoUrl: "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+    facebokUserInfoUrl: "https://graph.facebook.com/v3.2/me?fields=email,name",
     grant: {
         server: {
             protocol: "http",
@@ -21,6 +22,14 @@ export const Config = {
                 "profile",
                 "email",
                 "https://www.googleapis.com/auth/userinfo.profile"
+            ]
+        },
+        facebook: {
+            key: "267125553982106",
+            secret: "2badf21d0e2cf282015f53de4cb7d8c8",
+            callback: "/facebook_callback",
+            scope: [
+                "email"
             ]
         }
     }
