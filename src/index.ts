@@ -11,6 +11,8 @@ import exphbs = require('express-handlebars');
 import path = require('path');
 import Log from 'utils/Log';
 const { createLogger, format, transports } = require('winston');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
 
 const app = express();
 
@@ -35,12 +37,13 @@ app.use(new Grant(Config.grant));
 app.get('/google_callback', injectLocation, AuthController.googleAuthCallback);
 app.get('/facebook_callback', injectLocation, AuthController.facebookAuthCallback);
 
+// API router and docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api', BaseRouter);
+
 // Web router
 app.use('/', express.static(path.join(__dirname, '../public')))
 app.use('/', WebRouter);
-
-// API router
-app.use('/api', BaseRouter);
 
 mongoose.set('useCreateIndex', true);
 mongoose.connect(Config.mongodbDatabase, {
