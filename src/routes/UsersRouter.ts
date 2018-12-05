@@ -1,11 +1,12 @@
 import { Router, Request, Response } from 'express';
 import UserController from 'controllers/UserController';
+import { denyToRegularUsers } from 'middleware/Auth';
 
 const router: Router = Router();
 
 router.route('/')
     .get(UserController.listAll)
-    .post(UserController.create);
+    .post(denyToRegularUsers, UserController.create);
 
 router.route("/withMyInterests/:maxDistance")
     .get(UserController.listNearUsersWithMyInterests);

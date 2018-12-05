@@ -13,9 +13,6 @@ export default class GameController {
     }
 
     public static async create(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "Game creation forbidden" });
-        return;
         try {
             let toRet = await new GameModel(req.body).save();
             res.send(toRet);
@@ -34,9 +31,6 @@ export default class GameController {
     }
 
     public static async update(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "Game editing forbidden" });
-        return;
         try {
             let toRet = await GameModel.findOneAndUpdate({ _id: req.params.gameId }, req.body, { new: true });
             res.send(toRet);
@@ -46,9 +40,6 @@ export default class GameController {
     }
 
     public static async delete(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "Game deleting forbidden" });
-        return;
         try {
             let toRet = await GameModel.findByIdAndRemove(req.params.gameId);
             if (!toRet) {

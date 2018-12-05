@@ -13,9 +13,6 @@ export default class UserController {
     }
 
     public static async create(req, res) {
-        // TODO: Create user roles and allow admins to do it.
-        res.status(403).send({ message: "User creation forbidden" });
-        return;
         try {
             let toRet = await new UserModel(req.body).save();
             res.send(toRet);
