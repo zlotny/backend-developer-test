@@ -1,16 +1,27 @@
-import { BaseRouter } from "routes/BaseRouter";
 import { Config } from 'config/Configuration';
+import AuthController from 'controllers/AuthController';
+import { injectLocation } from 'middleware/Location';
+import { BaseRouter } from "routes/BaseRouter";
+import { WebRouter } from "routes/WebRouter";
 import mongoose = require('mongoose');
 import express = require('express');
 import Grant = require('grant-express');
 import session = require('express-session');
-import { injectLocation } from 'middleware/Location';
-import AuthController from 'controllers/AuthController';
-import { WebRouter } from "routes/WebRouter";
 import exphbs = require('express-handlebars');
 import path = require('path');
+import Log from 'utils/Log';
+const { createLogger, format, transports } = require('winston');
 
 const app = express();
+
+// Winston logger
+const logger = createLogger({
+    level: 'info',
+    format: format.simple(),
+    // You can also comment out the line above and uncomment the line below for JSON format
+    // format: format.json(),
+    transports: [new transports.Console()]
+});
 
 // Support for handlebars
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -31,10 +42,11 @@ app.use('/', WebRouter);
 // API router
 app.use('/api', BaseRouter);
 
+mongoose.set('useCreateIndex', true);
 mongoose.connect(Config.mongodbDatabase, {
     useNewUrlParser: true,
 });
 
 app.listen(Config.port, () => {
-    console.log(`Server started at port ${Config.port}`);
+    Log.Instance.info(`Server started at port ${Config.port}`);
 });
