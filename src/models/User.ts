@@ -12,7 +12,7 @@ export default class User extends Typegoose {
     @prop({ required: true })
     name: string;
 
-    @prop()
+    @prop({ required: true, default: new GeoCoordinates() })
     location: GeoCoordinates;
 
     @arrayProp({ itemsRef: Game })
