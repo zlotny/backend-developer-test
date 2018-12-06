@@ -4,8 +4,6 @@ import { Config } from './Configuration';
 
 const GameModel: any = new Game().getModelForClass(Game);
 
-// TODO: Change this to static class, refactor and doc.
-
 export default class DatabaseSeeder {
 
     /**
