@@ -1,6 +1,6 @@
 export const Config = {
     port: process.env.PORT || 3000,
-    mongodbDatabase: process.env.MONGODATABASE || "mongodb://localhost:27017/feeld-test",
+    mongodbDatabase: process.env.MONGODATABASE || "mongodb://ndrs:abc123..@ds127624.mlab.com:27624/ndrs",
     seedDataIfDBEmpty: true,
     logfile: "application.log",
     logDir: "./",

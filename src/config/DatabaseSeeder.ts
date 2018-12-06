@@ -16,6 +16,9 @@ export default class DatabaseSeeder {
      * @returns Promise
      */
     public static async handler(err: any, db: any): Promise<void> {
+        if(err){
+            Log.Instance.info(err);
+        }
         if (Config.seedDataIfDBEmpty) {
             db.collection("games").countDocuments(async (err: any, count: number): Promise<void> => {
                 if (count === 0) {
