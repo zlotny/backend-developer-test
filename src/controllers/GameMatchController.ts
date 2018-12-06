@@ -25,8 +25,9 @@ export default class GameMatchController {
             return;
         }
 
-        if (!req.body.host.games.includes(req.body.game._id)) {
+        if (req.body.host.games.filter(gameId => (req.body.game._id.toString() == gameId.toString())).length == 0) {
             res.status(403).send({ message: "You cannot create a match for a game not in your interests" });
+            return;
         }
 
         if (req.body.host._id.toString() != req.user._id.toString()) {
@@ -48,8 +49,10 @@ export default class GameMatchController {
         try {
             let toRet = await GameMatchModel.findById(req.params.gameMatchId);
             res.send(toRet);
+            return;
         } catch (err) {
             res.status(400).send(err);
+            return;
         }
     }
 
@@ -95,6 +98,48 @@ export default class GameMatchController {
             }
         } catch (err) {
             res.status(400).send(err);
+        }
+    }
+
+    public static async listNearMatchesByMyInterests(req, res) {
+        try {
+            // First query near users (not me), then get matches created by them 
+            // and compatible by taste. Also not filled out... yeez. this gun'be slow
+            let nearUsers = await UserModel.find({
+                _id: { $ne: req.user._id },
+                games: { $in: req.user.games },
+                location: {
+                    $near:
+                    {
+                        $geometry:
+                        {
+                            type: "Point",
+                            coordinates: req.user.location
+                        },
+                        $maxDistance: Number(req.params.maxDistance)
+                    }
+                }
+            }).select("-token").sort('location');
+
+            let nearMatches = [];
+
+            let nearMatchesInArrayForm = await Promise.all(nearUsers.map(async (user) => {
+                let matches = await GameMatchModel.find({
+                    host: user._id,
+                    game: { $in: req.user.games }
+                });
+                return matches;
+            }));
+
+            nearMatchesInArrayForm.forEach((matchArray: Array<any>) => {
+                nearMatches.push(...matchArray);
+            });
+
+            res.json(nearMatches);
+            return;
+        } catch (err) {
+            res.status(400).send(err);
+            return;
         }
     }
 }

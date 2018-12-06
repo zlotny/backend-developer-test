@@ -6,7 +6,7 @@ export const requiresAuth = async (req: any, res: any, next: any): Promise<any> 
     let reqToken = req.token;
     let user = await UserModel.findOne({
         token: reqToken
-    });
+    }).select("-token");
     if (user !== null) {
         req.user = user;
         next();

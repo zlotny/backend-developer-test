@@ -1,7 +1,7 @@
 import { prop, Typegoose, arrayProp, Ref, index } from 'typegoose';
 import Game from './Game';
 
-@index({ location: '2d' })
+@index({ location: '2dsphere' })
 export default class User extends Typegoose {
     @prop({ required: true, unique: true })
     email: string;

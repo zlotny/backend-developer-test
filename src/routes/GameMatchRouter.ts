@@ -7,6 +7,9 @@ router.route('/')
     .get(GameMatchController.listAll)
     .post(GameMatchController.create);
 
+router.route('/near/:maxDistance')
+    .get(GameMatchController.listNearMatchesByMyInterests);
+
 router.route('/:gameMatchId')
     .get(GameMatchController.read)
     .put(GameMatchController.update)

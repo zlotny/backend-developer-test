@@ -123,7 +123,7 @@ export default class UserController {
                         $maxDistance: Number(req.params.maxDistance)
                     }
                 }
-            }).select("-token");
+            }).select("-token").sort('location');
             res.json(toRet);
             return;
         } catch (err) {
