@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This is the documentation on how to use the API",
+    "description": "This is the documentation on how to use the API. Please, get a token from /api/connect/google or /api/connect/facebook before querying. The token printed on screen after the authentication flow has to be in a authentication header as a Bearer token.",
     "version": "0.0.1",
     "title": "Feeld Backend Test",
     "contact": {
