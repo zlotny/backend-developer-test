@@ -41,7 +41,7 @@ The following commands are an example on how to run the docker image. Remember t
 ```
 $ cd backend-developer-test
 $ docker build -t ndrs/feeld-backend-test .
-$ docker run --name <just-a-name> -d -p 3000:3000 -e SERVER_HOST_AND_PORT="http://<myhost>:3000" ndrs/feeld-backend-test
+$ docker run --name <just-a-name> -d -p 3000:3000 -e SERVER_HOST_AND_PORT="<myhost>:3000" ndrs/feeld-backend-test
 ```
 
 ### Manual installation
