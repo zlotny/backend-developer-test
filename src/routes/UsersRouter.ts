@@ -1,12 +1,12 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import UserController from 'controllers/UserController';
-import { denyToRegularUsers } from 'middleware/Auth';
+import AuthMiddleware from 'middleware/Auth';
 
 const router: Router = Router();
 
 router.route('/')
     .get(UserController.listAll)
-    .post(denyToRegularUsers, UserController.create);
+    .post(AuthMiddleware.denyToRegularUsers, UserController.create);
 
 router.route('/me')
     .get(UserController.getOwnInformation);

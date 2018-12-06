@@ -1,6 +1,7 @@
-const { createLogger, format, transports } = require('winston');
+import * as Winston from 'winston';
 import moment = require('moment');
 import { Config } from 'config/Configuration';
+import { Format } from 'logform';
 
 /**
  * Defines a singleton logging class that logs to the specified
@@ -8,23 +9,23 @@ import { Config } from 'config/Configuration';
  */
 export default class Log {
     private static _instance: Log;
-    private logger: any;
-    private logFormat: any;
+    private logger: Winston.Logger;
+    private logFormat: Format;
 
     constructor() {
         let transportConfig = [
-            new transports.File({
+            new Winston.transports.File({
                 filename: Config.logfile,
                 dirname: Config.logDir
             }),
-            new transports.Console()
+            new Winston.transports.Console()
         ];
 
-        this.logFormat = format.printf(info => {
+        this.logFormat = Winston.format.printf(info => {
             return `${info.timestamp} [${info.level}]: ${info.message}`;
         });
 
-        this.logger = createLogger({
+        this.logger = Winston.createLogger({
             level: 'debug',
             format: this.logFormat,
             transports: transportConfig

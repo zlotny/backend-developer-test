@@ -1,23 +1,36 @@
 import JoinRequest from "models/JoinRequest";
 import GameMatch from "models/GameMatch";
 import User from "models/User";
-import { join } from "path";
+import Express = require('express');
 
 const JoinRequestModel: any = new JoinRequest().getModelForClass(JoinRequest);
 const GameMatchModel: any = new GameMatch().getModelForClass(GameMatch);
 const UserModel: any = new User().getModelForClass(User);
 
 export default class JoinRequestController {
-    public static async listAll(req, res) {
+
+    /**
+     * Lists all join requests
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async listAll(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await JoinRequestModel.find({});
+            let toRet: Array<typeof JoinRequestModel> = await JoinRequestModel.find({});
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async create(req, res) {
+    /**
+     * Creates a join request
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async create(req: any, res: Express.Response): Promise<void> {
         try {
             req.body.match = await GameMatchModel.findById(req.body.match._id);
             if (req.body.match === null) {
@@ -60,7 +73,7 @@ export default class JoinRequestController {
         }
 
         try {
-            let toRet = await new JoinRequestModel(req.body).save();
+            let toRet: typeof JoinRequestModel = await new JoinRequestModel(req.body).save();
             res.send(toRet);
             return;
         } catch (err) {
@@ -69,25 +82,43 @@ export default class JoinRequestController {
         }
     }
 
-    public static async read(req, res) {
+    /**
+     * Retrieves a single join request
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async read(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await JoinRequestModel.findById(req.params.joinRequestId);
+            let toRet: typeof JoinRequestModel = await JoinRequestModel.findById(req.params.joinRequestId);
             res.send(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async update(req, res) {
+    /**
+     * Updates a join request
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async update(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await JoinRequestModel.findOneAndUpdate({ _id: req.params.joinRequestId }, req.body, { new: true });
+            let toRet: typeof JoinRequestModel = await JoinRequestModel.findOneAndUpdate({ _id: req.params.joinRequestId }, req.body, { new: true });
             res.send(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async delete(req, res) {
+    /**
+     * Deletes a join request
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async delete(req: any, res: Express.Response): Promise<void> {
         let targetRequest = await JoinRequestModel.findById(req.params.joinRequestId);
         try {
             if (!targetRequest) {
@@ -106,26 +137,44 @@ export default class JoinRequestController {
         }
     }
 
-    public static async listReceivedRequests(req, res) {
+    /**
+     * Lists all the requesting user received requests
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async listReceivedRequests(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await JoinRequestModel.find({ "destination": req.user, "resolved": false });
+            let toRet: Array<typeof JoinRequestModel> = await JoinRequestModel.find({ "destination": req.user, "resolved": false });
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async listSentRequests(req, res) {
+    /**
+     * Lists all the requesting user sent requests
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async listSentRequests(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await JoinRequestModel.find({ "source": req.user, "resolved": false });
+            let toRet: Array<typeof JoinRequestModel> = await JoinRequestModel.find({ "source": req.user, "resolved": false });
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async sendRequestToGameMatch(req, res) {
-        let gameMatch = await GameMatchModel.findById(req.params.matchId);
+    /**
+     * Sends a request to a game match
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async sendRequestToGameMatch(req: any, res: Express.Response): Promise<void> {
+        let gameMatch: typeof GameMatchModel = await GameMatchModel.findById(req.params.matchId);
         if (gameMatch === null) {
             res.status(404).send({ message: "Match not found" });
             return
@@ -136,7 +185,7 @@ export default class JoinRequestController {
             return;
         }
 
-        let toRet = await new JoinRequestModel({
+        let toRet: typeof JoinRequestModel = await new JoinRequestModel({
             source: req.user,
             destination: gameMatch.host,
             match: gameMatch
@@ -144,10 +193,16 @@ export default class JoinRequestController {
         res.send(toRet);
     }
 
-    public static async acceptRequest(req, res) {
-        let joinRequest = await JoinRequestModel.findById(req.params.joinRequestId);
+    /**
+     * Accepts a received request
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async acceptRequest(req: any, res: Express.Response): Promise<void> {
+        let joinRequest: typeof JoinRequestModel = await JoinRequestModel.findById(req.params.joinRequestId);
 
-        let targetMatch = await GameMatchModel.findById(joinRequest.match);
+        let targetMatch: typeof GameMatchModel = await GameMatchModel.findById(joinRequest.match);
 
         if (joinRequest === null) {
             res.status(404).send({ message: "Join request not found" });

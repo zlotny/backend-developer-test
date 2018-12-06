@@ -1,16 +1,16 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import GameController from 'controllers/GameController';
-import { denyToRegularUsers } from 'middleware/Auth';
+import AuthMiddleware from 'middleware/Auth';
 
 const router: Router = Router();
 
 router.route('/')
     .get(GameController.listAll)
-    .post(denyToRegularUsers, GameController.create);
+    .post(AuthMiddleware.denyToRegularUsers, GameController.create);
 
 router.route('/:gameId')
     .get(GameController.read)
-    .put(denyToRegularUsers, GameController.update)
-    .delete(denyToRegularUsers, GameController.delete);
+    .put(AuthMiddleware.denyToRegularUsers, GameController.update)
+    .delete(AuthMiddleware.denyToRegularUsers, GameController.delete);
 
 export const GamesRouter: Router = router;

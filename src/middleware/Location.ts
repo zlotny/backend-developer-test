@@ -1,15 +1,25 @@
 import Axios from "axios";
 import { Config } from "config/Configuration";
+import Express = require('express');
 
-export const injectLocation = async (req: any, res: any, next: any): Promise<any> => {
-    let locationData = await Axios.get(
-        Config.geoLocationAPIUrl
-    );
+export default class LocationMiddleware {
 
-    req.location = [
-        locationData.data.lat,
-        locationData.data.lon
-    ];
+    /**
+     * @param  {any} req - The request sent to the server
+     * @param  {Express.Response} res - The Response object
+     * @param  {Express.NextFunction} next - Function to continue middleware chain
+     * @returns Promise
+     */
+    public static async injectLocation(req: any, res: Express.Response, next: Express.NextFunction): Promise<void> {
+        let locationData: any = await Axios.get(
+            Config.geoLocationAPIUrl
+        );
 
-    next();
+        req.location = [
+            locationData.data.lat,
+            locationData.data.lon
+        ];
+
+        next();
+    }
 }

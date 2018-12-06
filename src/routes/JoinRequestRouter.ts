@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import JoinRequestController from 'controllers/JoinRequestController';
-import { denyToRegularUsers } from 'middleware/Auth';
+import AuthMiddleware from 'middleware/Auth';
 
 const router: Router = Router();
 
 router.route('/')
-    .get(denyToRegularUsers, JoinRequestController.listAll)
+    .get(AuthMiddleware.denyToRegularUsers, JoinRequestController.listAll)
     .post(JoinRequestController.create);
 
 router.route("/received")
@@ -16,7 +16,7 @@ router.route("/sent")
 
 router.route('/:joinRequestId')
     .get(JoinRequestController.read)
-    .put(denyToRegularUsers, JoinRequestController.update)
+    .put(AuthMiddleware.denyToRegularUsers, JoinRequestController.update)
     .delete(JoinRequestController.delete);
 
 router.route("/send/:matchId")

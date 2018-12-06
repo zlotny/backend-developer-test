@@ -1,22 +1,36 @@
 import GameMatch from "models/GameMatch";
 import User from "models/User";
 import Game from "models/Game";
+import Express = require('express');
 
 const GameMatchModel: any = new GameMatch().getModelForClass(GameMatch);
 const GameModel: any = new Game().getModelForClass(Game);
 const UserModel: any = new User().getModelForClass(User);
 
 export default class GameMatchController {
-    public static async listAll(req, res) {
+
+    /**
+     * Lists all the game matches
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async listAll(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await GameMatchModel.find({});
+            let toRet: Array<typeof GameMatchModel> = await GameMatchModel.find({});
             res.json(toRet);
         } catch (err) {
             res.status(400).send(err);
         }
     }
 
-    public static async create(req, res) {
+    /**
+     * Creates a game match
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async create(req: any, res: Express.Response): Promise<void> {
         try {
             req.body.game = await GameModel.findById(req.body.game._id);
             req.body.host = await UserModel.findById(req.body.host._id);
@@ -36,7 +50,7 @@ export default class GameMatchController {
         }
 
         try {
-            let toRet = await new GameMatchModel(req.body).save();
+            let toRet: typeof GameMatchModel = await new GameMatchModel(req.body).save();
             res.send(toRet);
             return;
         } catch (err) {
@@ -45,9 +59,15 @@ export default class GameMatchController {
         }
     }
 
-    public static async read(req, res) {
+    /**
+     * Retrieves a single game match
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async read(req: any, res: Express.Response): Promise<void> {
         try {
-            let toRet = await GameMatchModel.findById(req.params.gameMatchId);
+            let toRet: typeof GameMatchModel = await GameMatchModel.findById(req.params.gameMatchId);
             res.send(toRet);
             return;
         } catch (err) {
@@ -56,7 +76,13 @@ export default class GameMatchController {
         }
     }
 
-    public static async update(req, res) {
+    /**
+     * Updates a game match information
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async update(req: any, res: Express.Response): Promise<void> {
         try {
             req.body.host = await UserModel.findById(req.body.host._id);
             req.body.game = await GameModel.findById(req.body.game._id);
@@ -71,7 +97,7 @@ export default class GameMatchController {
         }
 
         try {
-            let toRet = await GameMatchModel.findOneAndUpdate({ _id: req.params.gameMatchId }, req.body, { new: true });
+            let toRet: typeof GameMatchModel = await GameMatchModel.findOneAndUpdate({ _id: req.params.gameMatchId }, req.body, { new: true });
             res.send(toRet);
             return;
         } catch (err) {
@@ -80,8 +106,14 @@ export default class GameMatchController {
         }
     }
 
-    public static async delete(req, res) {
-        let targetMatch = await GameMatchModel.findById(req.params.gameMatchId);
+    /**
+     * Deeltes a game match
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async delete(req: any, res: Express.Response): Promise<void> {
+        let targetMatch: typeof GameMatchModel = await GameMatchModel.findById(req.params.gameMatchId);
         try {
             if (!targetMatch) {
                 res.status(404).send({ message: 'GameMatch not found' });
@@ -101,11 +133,15 @@ export default class GameMatchController {
         }
     }
 
-    public static async listNearMatchesByMyInterests(req, res) {
+    /**
+     * Lists near matches in which the requesting user has an interest
+     * @param  {any} req
+     * @param  {Express.Response} res
+     * @returns Promise
+     */
+    public static async listNearMatchesByMyInterests(req: any, res: Express.Response): Promise<void> {
         try {
-            // First query near users (not me), then get matches created by them 
-            // and compatible by taste. Also not filled out... yeez. this gun'be slow
-            let nearUsers = await UserModel.find({
+            let nearUsers: Array<typeof UserModel> = await UserModel.find({
                 _id: { $ne: req.user._id },
                 games: { $in: req.user.games },
                 location: {
@@ -121,9 +157,9 @@ export default class GameMatchController {
                 }
             }).select("-token").sort('location');
 
-            let nearMatches = [];
+            let nearMatches: typeof GameMatchModel = [];
 
-            let nearMatchesInArrayForm = await Promise.all(nearUsers.map(async (user) => {
+            let nearMatchesInArrayForm: Array<Array<GameMatch>> = await Promise.all(nearUsers.map(async (user) => {
                 let matches = await GameMatchModel.find({
                     host: user._id,
                     game: { $in: req.user.games }

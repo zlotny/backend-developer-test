@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { requiresAuth } from 'middleware/Auth';
 import { UsersRouter } from './UsersRouter';
 import { GamesRouter } from './GamesRouter';
 import bodyParser = require('body-parser');
 import bearerToken = require('express-bearer-token');
 import { GameMatchsRouter } from './GameMatchRouter';
 import { JoinRequestRouter } from './JoinRequestRouter';
+import AuthMiddleware from 'middleware/Auth';
 
 const router: Router = Router();
 
@@ -14,9 +14,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.use(bearerToken())
 
-router.use('/users', requiresAuth, UsersRouter);
-router.use('/games', requiresAuth, GamesRouter);
-router.use('/gameMatches', requiresAuth, GameMatchsRouter);
-router.use('/joinRequests', requiresAuth, JoinRequestRouter);
+// API routes
+router.use('/users', AuthMiddleware.requiresAuth, UsersRouter);
+router.use('/games', AuthMiddleware.requiresAuth, GamesRouter);
+router.use('/gameMatches', AuthMiddleware.requiresAuth, GameMatchsRouter);
+router.use('/joinRequests', AuthMiddleware.requiresAuth, JoinRequestRouter);
 
 export const BaseRouter: Router = router;
