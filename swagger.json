@@ -1,1 +1,642 @@
-{}
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the documentation on how to use the API",
+    "version": "0.0.1",
+    "title": "Feeld Backend Test",
+    "contact": {
+      "email": "anvieiravazquez@gmail.com"
+    }
+  },
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "users",
+      "description": "The application users"
+    },
+    {
+      "name": "games",
+      "description": "Board games for users to play"
+    },
+    {
+      "name": "gameMatches",
+      "description": "A match made by an user for others to join"
+    },
+    {
+      "name": "joinRequests",
+      "description": "A request to join a match"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Lists all the users",
+        "responses": {
+          "400": {
+            "description": "Error retrieving users"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Creates an user from request data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Gets the user model for the user making the request",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/users/withMyInterests/{maxDistance}": {
+      "parameters": [
+        {
+          "name": "maxDistance",
+          "in": "path",
+          "description": "ID of the user in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Lists near (GPS Location) users with the same interests",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "ID of the user in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Retrieves a single user",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Modifies an user",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Deletes an user",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/users/{userId}/games/{gameId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "description": "ID of the user in context",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "gameId",
+          "in": "path",
+          "description": "ID of the game in context",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/games": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Lists all the games",
+        "responses": {
+          "400": {
+            "description": "Error retrieving games"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Creates a game from request data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Game object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Game"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/games/{gameId}": {
+      "parameters": [
+        {
+          "name": "gameId",
+          "in": "path",
+          "description": "ID of the game in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Retrieves a single game",
+        "responses": {
+          "400": {
+            "description": "Error retrieving games"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Modifies a game",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Game object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Game"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Deletes a game",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/gameMatches": {
+      "get": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Retrieves all game matches",
+        "responses": {
+          "400": {
+            "description": "Error retrieving gameMatches"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Creates a game match from request data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "GameMatch object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GameMatch"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/gameMatches/near/{maxDistance}": {
+      "parameters": [
+        {
+          "name": "maxDistance",
+          "in": "path",
+          "description": "Distance in meters to calculate",
+          "required": true,
+          "type": "number"
+        }
+      ],
+      "get": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Retrieves all game matches near you",
+        "responses": {
+          "400": {
+            "description": "Error retrieving game matches"
+          }
+        }
+      }
+    },
+    "/gamematches/{gameMatchId}": {
+      "parameters": [
+        {
+          "name": "gameMatchId",
+          "in": "path",
+          "description": "ID of the game match in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Retrieves a single game match",
+        "responses": {
+          "400": {
+            "description": "Error retrieving game match"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Modifies a game match",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Game match object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GameMatch"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Deletes a game match",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/joinRequests": {
+      "get": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Lists all join requests",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Creates a join request from request data",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JoinRequest object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JoinRequest"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/joinRequests/received": {
+      "get": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Retrieves all received join requests",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/joinRequests/sent": {
+      "get": {
+        "tags": [
+          "gameMatches"
+        ],
+        "summary": "Retrieves all sent join requests",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/joinRequests/{joinRequestId}": {
+      "parameters": [
+        {
+          "name": "joinRequestId",
+          "in": "path",
+          "description": "ID of the join request in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Retrieves a single join request",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Modifies a join request",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Join request data to modify",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JoinRequest"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Deletes a join request",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/joinRequests/send/{matchId}": {
+      "parameters": [
+        {
+          "name": "matchId",
+          "in": "path",
+          "description": "ID of the game match in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "post": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Sends a join request to a match",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/joinRequests/accept/{joinRequestId}": {
+      "parameters": [
+        {
+          "name": "joinRequestId",
+          "in": "path",
+          "description": "ID of the join request in context",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "put": {
+        "tags": [
+          "joinRequests"
+        ],
+        "summary": "Accepts a join request",
+        "responses": {
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Game": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "minPlayers": {
+          "type": "number"
+        },
+        "maxPlayers": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "items": {
+            "type": "number"
+          }
+        },
+        "games": {
+          "items": {
+            "$ref": "#/definitions/Game"
+          }
+        },
+        "age": {
+          "type": "number"
+        },
+        "availableAsHost": {
+          "type": "boolean"
+        }
+      }
+    },
+    "GameMatch": {
+      "type": "object",
+      "properties": {
+        "game": {
+          "$ref": "#/definitions/Game"
+        },
+        "host": {
+          "$ref": "#/definitions/User"
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      }
+    },
+    "JoinRequest": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/User"
+        },
+        "destination": {
+          "$ref": "#/definitions/User"
+        },
+        "match": {
+          "$ref": "#/definitions/GameMatch"
+        },
+        "resolved": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}
