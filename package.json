@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "npm run build",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "start:dev": "nodemon"
   },
   "repository": {

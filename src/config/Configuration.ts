@@ -1,6 +1,6 @@
 export const Config = {
-    port: 3000,
-    mongodbDatabase: "mongodb://localhost:27017/feeld-test",
+    port: process.env.PORT || 3000,
+    mongodbDatabase: process.env.MONGODATABASE || "mongodb://localhost:27017/feeld-test",
     seedDataIfDBEmpty: true,
     logfile: "application.log",
     logDir: "./",
@@ -15,11 +15,11 @@ export const Config = {
     grant: {
         server: {
             protocol: "http",
-            host: "localhost:3000"
+            host: process.env.SERVER_HOST_AND_PORT || "localhost:3000"
         },
         google: {
-            key: "754430402565-v30n74gtrs1tedro6e8snhg3tvi5v727.apps.googleusercontent.com",
-            secret: "iKl-LJg4c3yUxT3KgWTyal6e",
+            key: process.env.GOOGLE_API_KEY || "754430402565-v30n74gtrs1tedro6e8snhg3tvi5v727.apps.googleusercontent.com",
+            secret: process.env.GOOGLE_API_SECRET || "iKl-LJg4c3yUxT3KgWTyal6e",
             callback: "/google_callback",
             scope: [
                 "profile",
@@ -28,8 +28,8 @@ export const Config = {
             ]
         },
         facebook: {
-            key: "267125553982106",
-            secret: "2badf21d0e2cf282015f53de4cb7d8c8",
+            key: process.env.FACEBOOK_API_KEY || "267125553982106",
+            secret: process.env.FACEBOOK_API_SECRET || "2badf21d0e2cf282015f53de4cb7d8c8",
             callback: "/facebook_callback",
             scope: [
                 "email"
